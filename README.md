@@ -40,3 +40,83 @@ Switch(config)# interface range FastEthernet 0/1 - 20
 Switch(config-if-range)# switchport mode access
 Switch(config-if-range)# switchport access vlan 10
 Switch(config-if-range)# exit
+
+
+Switch> enable
+Switch# configure terminal
+Switch(config)# vlan 20
+Switch(config-vlan)# name IT
+Switch(config-vlan)# exit
+Switch(config)# interface range FastEthernet 0/1 - 12
+Switch(config-if-range)# switchport mode access
+Switch(config-if-range)# switchport access vlan 20
+Switch(config-if-range)# exit
+
+Switch(config)# vlan 40
+Switch(config-vlan)# name Services
+Switch(config-vlan)# exit
+Switch(config)# interface range FastEthernet 0/13 - 15
+Switch(config-if-range)# switchport mode access
+Switch(config-if-range)# switchport access vlan 40
+Switch(config-if-range)# exit
+
+
+
+Switch> enable
+Switch# configure terminal
+Switch(config)# vlan 30
+Switch(config-vlan)# name Accounting
+Switch(config-vlan)# exit
+Switch(config)# interface range FastEthernet 0/1 - 3
+Switch(config-if-range)# switchport mode access
+Switch(config-if-range)# switchport access vlan 30
+Switch(config-if-range)# exit
+
+
+Router> enable
+Router# configure terminal
+
+! HR Gateway
+Router(config)# interface GigabitEthernet0/0
+Router(config-if)# ip address 9.9.9.1 255.255.255.224
+Router(config-if)# no shutdown
+Router(config-if)# exit
+
+! IT Gateway
+Router(config)# interface GigabitEthernet0/1
+Router(config-if)# ip address 9.9.9.33 255.255.255.224
+Router(config-if)# no shutdown
+Router(config-if)# exit
+
+! Accounting Gateway
+Router(config)# interface GigabitEthernet0/2
+Router(config-if)# ip address 9.9.9.65 255.255.255.240
+Router(config-if)# no shutdown
+Router(config-if)# exit
+
+
+! HR Pool
+Router(config)# ip dhcp pool HR_POOL
+Router(dhcp-config)# network 9.9.9.0 255.255.255.224
+Router(dhcp-config)# default-router 9.9.9.1
+Router(dhcp-config)# exit
+
+! IT Pool
+Router(config)# ip dhcp pool IT_POOL
+Router(dhcp-config)# network 9.9.9.32 255.255.255.224
+Router(dhcp-config)# default-router 9.9.9.33
+Router(dhcp-config)# exit
+
+! Accounting Pool
+Router(config)# ip dhcp pool ACC_POOL
+Router(dhcp-config)# network 9.9.9.64 255.255.255.240
+Router(dhcp-config)# default-router 9.9.9.65
+Router(dhcp-config)# exit
+
+! Services Pool
+Router(config)# ip dhcp pool S_POOL
+Router(dhcp-config)# network 9.9.9.80 255.255.255.240
+Router(dhcp-config)# default-router 9.9.9.33
+Router(dhcp-config)# exit
+
+
